@@ -57,7 +57,7 @@ y_ticks = np.arange(0, 1, delta_y)
 grid_x, grid_y = np.meshgrid(x_ticks, y_ticks)
 
 color_map = plt.colormaps['jet']
-color_norm = colors.Normalize(vmin=0, vmax=2.0)
+color_norm = colors.Normalize(vmin=0, vmax=10.0)
 
 figure, axis = plt.subplots()
 
@@ -65,7 +65,7 @@ figure, axis = plt.subplots()
 render_freq = 200 # number of updates/frames between renders
 frame = 0 # frame counter
 max_frames = 100000000 # number of frames to be rendered
-save_images = False
+save_images = True
 while frame < max_frames:
     if (frame % render_freq == 0):
         pc = axis.pcolormesh(nodes.transpose(),norm=color_norm, cmap=color_map) # need to take transpose of nodes matrices to render properly
