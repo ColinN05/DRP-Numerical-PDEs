@@ -20,7 +20,7 @@ delta_x = 1/(M-1)
 delta_y = 1/(N-1)
 
 def source(x,y):
-    return 0
+    return -10.0 * x
 
 # returns coordinates of a node given its 1d index k
 def get_coords_from_index(k):
@@ -33,7 +33,7 @@ def get_2d_indices(k):
     j = k // M
     return i,j
 
-# boundary condition types
+# boundary conditions
 boundary_conditions = {'left': 'neumann', 'right': 'neumann', 'top': 'neumann', 'bottom': 'dirichlet'}
 prescribed_values = {'left': 0.0, 'right': 1.0, 'top':1.0, 'bottom': 1.0}
 
@@ -94,10 +94,10 @@ for k in range(M*N):
 # convert matrix to CSR format for faster calculations
 mat_CSR = mat_LIL.tocsr() 
 
-# solve system Ax = y
+# solve system to get temperature at each node
 node_temps = scipy.sparse.linalg.spsolve(mat_CSR, right_column_vector)
 
-# render the solution
+# render the solution =====================
 from matplotlib import colors
  
 data = node_temps.reshape(M,N)
