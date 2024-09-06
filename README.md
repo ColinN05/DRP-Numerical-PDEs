@@ -12,6 +12,6 @@ The methods used are:
 * Euler's method
 * Finite volume method (not implemented yet).
 
-<img src="Images/laplace_solution.png" width=450 height=450>
+<img src="Images/HeatEquation/heatequation.gif" width=400 height=400>
 
-<f1>Approximate solution to Laplace's equation in a square region.</f1>
+<f1>Approximate solution to the heat equation in a square region.</f1>
