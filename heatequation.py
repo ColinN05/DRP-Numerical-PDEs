@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 from matplotlib import colors
 
 M = 75 # number of nodes in x direction
-N = 75 # number of nodes in y direction
+N =  75 # number of nodes in y direction
 
 # spacing between nodes
 delta_x = 1/(M-1)
@@ -15,9 +15,22 @@ delta_y = 1/(N-1)
 
 # time step, this has to be small enough otherwise instability will occur
 delta_t = 0.001 
+time = 0
 
 # boundary conditions
-boundary_conditions = {'left': ('dirichlet',0.0), 'right': ('neumann',0.0), 'top': ('neumann', 0.0), 'bottom': ('neumann',0.0)}
+def left_value(t):
+    return 5 * np.sin(5 * t) + 5
+def right_value(t):
+    return 0
+def top_value(t):
+    return 0
+def bottom_value(t):
+    return 0
+
+
+
+
+boundary_conditions = {'left': ('dirichlet', left_value), 'right': ('dirichlet',right_value), 'top': ('dirichlet', top_value), 'bottom': ('dirichlet',bottom_value)}
 
 nodes = np.zeros((M,N))
 new_nodes = np.zeros((M,N))
@@ -62,9 +75,9 @@ color_norm = colors.Normalize(vmin=0, vmax=10.0)
 figure, axis = plt.subplots()
 
 # render results of simulation
-render_freq = 200 # number of updates/frames between renders
+render_freq = 50 # number of updates/frames between renders
 frame = 0 # frame counter
-max_frames = 100000000 # number of frames to be rendered
+max_frames = 100000 # number of frames to be simulated
 save_images = True
 while frame < max_frames:
     if (frame % render_freq == 0):
@@ -82,17 +95,17 @@ while frame < max_frames:
             # first compute second derivatives of temp at node i,j at the current time step
             # d1 denotes d^2(temp)/dx^2
             # d2 denotes d^2(temp)/dy^2
-            d1 = 0
+            d1 = 0 
             d2 = 0
             node_type = get_node_type(i,j)
             if (node_type == 'interior'):
                 d1 = (nodes[i+1,j] + nodes[i-1, j] - 2 * nodes[i,j]) / (delta_x**2)
                 d2 = (nodes[i, j+1] + nodes[i, j-1] - 2 * nodes[i,j]) / (delta_y**2)
             elif (boundary_conditions[node_type][0] == "dirichlet"):
-                new_nodes[i,j] = boundary_conditions[node_type][1]
+                new_nodes[i,j] = boundary_conditions[node_type][1](time)
                 continue # since we've already found the new temp at this node
             elif (boundary_conditions[node_type][0] == "neumann"):
-                prescribed_flux = boundary_conditions[node_type][1]
+                prescribed_flux = boundary_conditions[node_type][1](time)
                 # compute d1 first
                 if (i == 0):
                     d1 = 2/(delta_x ** 2) * (nodes[i+1,j] - nodes[i,j] - prescribed_flux * delta_x)
@@ -113,3 +126,5 @@ while frame < max_frames:
 
     # update node temps
     nodes = new_nodes.copy()
+
+    time += delta_t

@@ -13,8 +13,8 @@ import scipy.sparse.linalg
 import matplotlib.pyplot as plt
 
 # M = # nodes in x direction, N = # nodes in y direction
-M = 50
-N = 50
+M = 500
+N = 500
 
 delta_x = 1/(M-1)
 delta_y = 1/(N-1)
