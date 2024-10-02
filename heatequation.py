@@ -78,7 +78,7 @@ figure, axis = plt.subplots()
 render_freq = 50 # number of updates/frames between renders
 frame = 0 # frame counter
 max_frames = 100000 # number of frames to be simulated
-save_images = True
+save_images = False
 while frame < max_frames:
     if (frame % render_freq == 0):
         pc = axis.pcolormesh(nodes.transpose(),norm=color_norm, cmap=color_map) # need to take transpose of nodes matrices to render properly
