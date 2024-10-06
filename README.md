@@ -12,12 +12,14 @@ Methods:
 * Euler's method
 * Finite volume method (not implemented yet).
 
+(Methods are outlined in Mazumder's Numerical Methods for Partial Differential Equations)
+
 <h2>Demos</h2>
 
 <img src="Images/HeatEquation/oscillating_boundary.gif" width=300 height=300>
 
 <f1>Heat equation in square region with oscillating left boundary temperature.</f1>
 
-<img src="Images/WaveEquation/waveequation.gif" width=300 height=300>
+<img src="Images/WaveEquation/doubleslit.gif" width=300 height=300>
 
-<f1>Wave equation with Dirichlet boundary conditions and Gaussian initial condition.</f1>
+<f1>Wave equation in square with two slit barrier.</f1>

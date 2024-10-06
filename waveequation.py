@@ -5,15 +5,15 @@ import matplotlib.pyplot as plt
 from matplotlib import colors
 
 # wave velocity
-c = 0.5
+c = 1.25
 
-M = 30 # nodes in the x direction
-N = 30 # nodes in the y direction
+M = 300 # nodes in the x direction
+N =  300 # nodes in the y direction
 
 # node spacing
 delta_x = 1.0/(M-1.0) 
 delta_y = 1.0/(N-1.0)
-delta_t = 0.02
+delta_t = 0.001
 
 # coefficients that appear in the udpate formula
 alpha = 1.0/(delta_t**2)
@@ -27,9 +27,10 @@ nodes_old2 = np.zeros((M,N)) # at t- 2 * delta_t
 
 #initial conditions
 def init_value(x,y):
-    return 10.0 / (1.0 + (1.0 + (20.0*(x-0.5))**2 + (20.0*(y-0.5))**2)) # gaussian
+    #return 10.0 / (1.0 + (1.0 + (20.0*(x-0.5))**2 + (20.0*(y-0.5))**2)) # gaussian
+    return 3.0 * np.exp(-10000.0*((x-0.05)**2 + (y-0.5)**2))# + 3.0 * np.exp(-1000.0 * ((x-0.75)**2 + (y-0.5)**2))
 def init_velocity(x,y):
-    return 1.0
+    return 0.0
 def coords(i,j,k):
     return i * delta_x, j * delta_y, k * delta_t
 
@@ -40,10 +41,10 @@ for i in range(M):
         nodes_old2[i,j] = init_value(x,y)
         nodes_old1[i,j] = init_value(x,y) + init_velocity(x,y) * delta_t
 
-max_frames = 150 # number of frames to rendered
+max_frames = 100000000 # number of frames to rendered
 frame = 0
-render_freq = 1
-save_images = False
+render_freq = 15
+save_images = True
 
 boundary_conditions = { "left": ("dirichlet", 0.0), "right": ("dirichlet", 0.0), "top": ("dirichlet", 0.0), "bottom": ("dirichlet", 0.0) }
 
@@ -67,7 +68,7 @@ y_ticks = np.arange(0, 1, delta_y)
 grid_x, grid_y = np.meshgrid(x_ticks, y_ticks)
 
 color_map = plt.colormaps['jet']
-color_norm = colors.Normalize(vmin=0.0, vmax=1.0)
+color_norm = colors.Normalize(vmin=0.0, vmax=0.25)
 
 figure, axis = plt.subplots()
 
@@ -79,6 +80,9 @@ while frame < max_frames:
             node_type = get_node_type(i,j)
             if node_type == "interior":
                 nodes[i,j] = interior_node_value(i,j)
+                x,y,t = coords(i,j,0)
+                if x > 0.45 and x < 0.55 and ((y > 0 and y < 0.2) or (y > 0.3 and y < 0.7) or (y > 0.8 and y < 1.0)):
+                    nodes[i,j] = 0
             else:
                 condition_type = boundary_conditions[node_type][0]
                 condition_value = boundary_conditions[node_type][1]
@@ -103,12 +107,12 @@ while frame < max_frames:
     # render and save image
     if (frame % render_freq == 0):
         pc = axis.pcolormesh(nodes.transpose(),norm=color_norm, cmap=color_map)
-        plt.pause(0.0001)
+        plt.pause(0.000001)
         
         if (save_images):
             plt.savefig('frame_'+ str(frame)+'.png')
 
     frame += 1
-
+    
 
 
